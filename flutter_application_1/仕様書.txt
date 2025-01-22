@@ -1,0 +1,2 @@
+main.dartで表示するページをyogiHomepage.dartに変更し
+そこから仮の一覧ページのdestPage.dartに遷移するようにしました
