@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/HomePage.dart';
+import 'package:flutter_application_1/yogiHomepage.dart';
 import 'package:flutter_application_1/MainPageWidget.dart';
 
 void main() {
@@ -34,9 +35,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //画面遷移練習の場合
-      // home: HomePage(),
+      home: YogiHomepage(),
       //ListViewの場合
-      home: MainPageWidget(),
+      // home: MainPageWidget(),
     );
   }
 }
