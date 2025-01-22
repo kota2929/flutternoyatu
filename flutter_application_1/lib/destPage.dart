@@ -25,12 +25,12 @@ class DestPage extends StatelessWidget {
               items[index],
               style: TextStyle(fontSize: 18),
             ),
-            onTap: () {
-              // リストアイテムがタップされた時の処理
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("${items[index]}が選択されました")),
-              );
-            },
+            // onTap: () {
+            //   // リストアイテムがタップされた時の処理
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //     SnackBar(content: Text("${items[index]}が選択されました")),
+            //   );
+            // },
           );
         },
       ),
