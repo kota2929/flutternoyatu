@@ -144,6 +144,7 @@ class ZutomayoQuizApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ZUTOMAYOクイズ',
+
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
@@ -157,40 +158,88 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const backgroundColor = Color(0xFF9932CC); // 背景色
+    const textColor = Colors.white; // 文字色
+
     return Scaffold(
-      appBar: AppBar(title: const Text('ZUTOMAYOクイズ')),
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        backgroundColor: backgroundColor,
+        toolbarHeight: 120,
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 90),
+            child: Text(
+              'ZUTOMAYOクイズ',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'PixelMplus',
+                fontSize: 32,
+
+              )
+            )
+            ))
+      ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('難易度を選んでください'),
+            const Text(
+              '難易度を選んでください',
+              style: TextStyle(
+                fontSize: 18, 
+                color: textColor,
+                fontFamily: 'PixelMplus',
+                ),
+            ),
             const SizedBox(height: 16),
-            ElevatedButton(
+            _buildButton('初級'),
+            _buildButton('中級'),
+            _buildButton('上級'),
+            _buildButton('ゲキムズ'),
+
+            const SizedBox(height: 32),
+            const Divider(thickness: 1, indent: 40, endIndent: 40, color: Colors.white),
+            const SizedBox(height: 16),
+
+            ElevatedButton.icon(
               onPressed: () {
-                // 初級クイズへ進む（仮）
+                // クイズ作成画面へ遷移（仮）
               },
-              child: const Text('初級'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // 中級クイズへ進む（仮）
-              },
-              child: const Text('中級'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // 上級クイズへ進む（仮）
-              },
-              child: const Text('上級'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // ゲキムズクイズへ進む（仮）
-              },
-              child: const Text('ゲキムズ'),
+              icon: const Icon(Icons.create, color: textColor),
+              label: const Text('クイズを作成する', 
+              style: TextStyle(
+                color: textColor,
+                fontFamily: 'PixelMplus',
+                )
+              
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange, // 作成ボタンの背景色
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// 難易度ボタン共通ウィジェット
+  static Widget _buildButton(String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: ElevatedButton(
+        onPressed: () {
+          // 各難易度の処理（仮）
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white, // ボタン背景
+          foregroundColor: Color(0xFF9932CC), // テキスト色
+        ),
+        child: Text(
+          label,
+          ),
       ),
     );
   }
