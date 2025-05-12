@@ -132,7 +132,8 @@
 
 
 import 'package:flutter/material.dart';
-
+import 'package:flutter_application_1/QuizPage.dart';
+import 'package:flutter_application_1/CreateQuizPage.dart';
 void main() {
   runApp(const ZutomayoQuizApp());
 }
@@ -194,10 +195,10 @@ class HomeScreen extends StatelessWidget {
                 ),
             ),
             const SizedBox(height: 16),
-            _buildButton('初級'),
-            _buildButton('中級'),
-            _buildButton('上級'),
-            _buildButton('ゲキムズ'),
+            _buildButton(context,'初級'),
+            _buildButton(context,'中級'),
+            _buildButton(context,'上級'),
+            _buildButton(context,'ゲキムズ'),
 
             const SizedBox(height: 32),
             const Divider(thickness: 1, indent: 40, endIndent: 40, color: Colors.white),
@@ -205,18 +206,23 @@ class HomeScreen extends StatelessWidget {
 
             ElevatedButton.icon(
               onPressed: () {
-                // クイズ作成画面へ遷移（仮）
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder:(context) => const CreateQuizPage()),
+                  );
               },
               icon: const Icon(Icons.create, color: textColor),
               label: const Text('クイズを作成する', 
               style: TextStyle(
                 color: textColor,
                 fontFamily: 'PixelMplus',
+                fontSize: 32,
                 )
               
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange, // 作成ボタンの背景色
+
               ),
             ),
           ],
@@ -226,19 +232,33 @@ class HomeScreen extends StatelessWidget {
   }
 
   /// 難易度ボタン共通ウィジェット
-  static Widget _buildButton(String label) {
+  static Widget _buildButton(BuildContext context, String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: ElevatedButton(
         onPressed: () {
-          // 各難易度の処理（仮）
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuizPage(difficulty: label),
+              ),
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white, // ボタン背景
-          foregroundColor: Color(0xFF9932CC), // テキスト色
+          foregroundColor: Color(0xFF9932CC),
+          minimumSize: const Size(220,60),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 4,
         ),
         child: Text(
           label,
+          style: const TextStyle(
+            fontFamily: 'PixelMplus',
+            fontSize: 32,
+            ),
           ),
       ),
     );
