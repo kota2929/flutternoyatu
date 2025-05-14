@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'dart:io';
-import 'dart:typed_data';  // Web用にbytesを扱うためのインポート
-import 'package:flutter/foundation.dart';  // kIsWebのためのインポート
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart'; // kIsWeb 用
 
 class CreateQuizPage extends StatefulWidget {
   const CreateQuizPage({super.key});
@@ -20,38 +18,29 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
   ];
 
   String? selectedGenre;
-  File? selectedAudio;
-  Uint8List? selectedAudioBytes;  // Web用のバイトデータ
-  final AudioPlayer audioPlayer = AudioPlayer();
+  String? selectedFileName;
+  Uint8List? fileBytes; // Web用にメモリ内データ保持（任意）
 
-  Future<void> pickAudioFile() async {
+  Future<void> pickMp3File() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp3'],
+      withData: kIsWeb, // Webではbytesを取得する必要がある
     );
 
-    if (result != null && result.files.single.path != null) {
+    if (result != null) {
+      final pickedFile = result.files.single;
+
       setState(() {
+        selectedFileName = pickedFile.name;
         if (kIsWeb) {
-          // Webの場合、pathではなくbytesを使用
-          selectedAudioBytes = result.files.single.bytes;
-          selectedAudio = null;  // Webの場合、Fileは使わない
+          fileBytes = pickedFile.bytes; // Webではこれを使う
         } else {
-          // モバイルの場合、Fileを使う
-          selectedAudio = File(result.files.single.path!);
-          selectedAudioBytes = null;  // モバイルの場合、bytesは使わない
+          // モバイルでは path を使って File(path) などの操作ができる
+          final path = pickedFile.path;
+          // 必要であれば File(path) を使って操作可能
         }
       });
-    }
-  }
-
-  void playAudio() async {
-    if (kIsWeb && selectedAudioBytes != null) {
-      // Webの場合、MemorySourceを使ってバイトデータで再生
-      await audioPlayer.play(BytesSource(selectedAudioBytes!));
-    } else if (selectedAudio != null) {
-      // モバイルの場合、DeviceFileSourceを使ってファイルから再生
-      await audioPlayer.play(DeviceFileSource(selectedAudio!.path));
     }
   }
 
@@ -95,8 +84,8 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
               onChanged: (value) {
                 setState(() {
                   selectedGenre = value!;
-                  selectedAudio = null;
-                  selectedAudioBytes = null;  // ジャンル変更時にオーディオデータもクリア
+                  selectedFileName = null;
+                  fileBytes = null;
                 });
               },
               hint: const Text(
@@ -106,31 +95,24 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
             ),
             const SizedBox(height: 20),
 
-            // イントロクイズ用のUI
+            // ▼ イントロクイズ用のUIを表示
             if (selectedGenre == 'イントロクイズ') ...[
               const Text(
-                'Mp3ファイルを選択してください',
-                style: TextStyle(fontSize: 16),
+                'MP3ファイルをアップロード',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: pickAudioFile,
+                onPressed: pickMp3File,
                 child: const Text('ファイルを選択'),
               ),
-              if (selectedAudio != null || selectedAudioBytes != null) ...[
-                const SizedBox(height: 10),
+              const SizedBox(height: 10),
+              if (selectedFileName != null)
                 Text(
-                  selectedAudio != null
-                      ? '選択されたファイル：${selectedAudio!.path.split('/').last}'
-                      : '選択されたファイル：${selectedAudioBytes != null ? "バイトデータ" : "なし"}',
+                  '選択されたファイル: $selectedFileName',
+                  style: const TextStyle(fontSize: 14),
                 ),
-                ElevatedButton.icon(
-                  onPressed: playAudio,
-                  icon: const Icon(Icons.play_arrow),
-                  label: const Text('試し聴き'),
-                ),
-              ] 
-            ]
+            ],
           ],
         ),
       ),
