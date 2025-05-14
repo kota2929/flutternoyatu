@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'dart:io';
 
 class CreateQuizPage extends StatefulWidget{
   const CreateQuizPage({super.key});
@@ -16,6 +19,8 @@ class _CreateQuizPageState extends State<CreateQuizPage>{
      ];
 
    String? selectedGenre;
+   File? selectedAudio;
+   final AudioPlayer audioPlayer = AudioPlayer();
 
    @override
     Widget build(BuildContext context){
