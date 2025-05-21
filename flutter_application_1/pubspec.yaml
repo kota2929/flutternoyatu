@@ -32,11 +32,13 @@ dependencies:
   flutter:
     sdk: flutter
   sqflite: ^2.3.0
+  sqflite_common_ffi: ^2.3.0
   path_provider: ^2.1.1
   path: ^1.8.3
   file_picker: ^6.1.1
   audioplayers: ^5.2.1
   just_audio: ^0.9.36  # 最新版を確認して反映
+  http: ^0.13.6  # 最新バージョンに注意
   
   
 

@@ -134,6 +134,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/QuizPage.dart';
 import 'package:flutter_application_1/CreateQuizPage.dart';
+import 'package:flutter_application_1/CreateQuizMenu.dart';
+import 'package:flutter_application_1/CreateIntoroQuiz.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 void main() {
   runApp(const ZutomayoQuizApp());
 }
@@ -145,7 +150,6 @@ class ZutomayoQuizApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ZUTOMAYOクイズ',
-
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
@@ -154,13 +158,47 @@ class ZutomayoQuizApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String dbStatus = "DB接続確認中...";
+
+  @override
+  void initState() {
+    super.initState();
+    _checkDatabaseConnection();
+  }
+
+  Future<void> _checkDatabaseConnection() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://localhost/quiz_api/get_quiz.php'),
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          dbStatus = "✅ DB接続成功";
+        });
+      } else {
+        setState(() {
+          dbStatus = "⚠️ 接続失敗 (ステータス: ${response.statusCode})";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        dbStatus = "❌ エラー発生: $e";
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    const backgroundColor = Color(0xFF9932CC); // 背景色
-    const textColor = Colors.white; // 文字色
+    const backgroundColor = Color(0xFF9932CC);
+    const textColor = Colors.white;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -176,62 +214,69 @@ class HomeScreen extends StatelessWidget {
                 color: Colors.white,
                 fontFamily: 'PixelMplus',
                 fontSize: 32,
-
-              )
-            )
-            ))
-      ),
-
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              '難易度を選んでください',
-              style: TextStyle(
-                fontSize: 18, 
-                color: textColor,
-                fontFamily: 'PixelMplus',
-                ),
+              ),
             ),
-            const SizedBox(height: 16),
-            _buildButton(context,'初級'),
-            _buildButton(context,'中級'),
-            _buildButton(context,'上級'),
-            _buildButton(context,'ゲキムズ'),
-
-            const SizedBox(height: 32),
-            const Divider(thickness: 1, indent: 40, endIndent: 40, color: Colors.white),
-            const SizedBox(height: 16),
-
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder:(context) => const CreateQuizPage()),
-                  );
-              },
-              icon: const Icon(Icons.create, color: textColor),
-              label: const Text('クイズを作成する', 
+          ),
+        ),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            '難易度を選んでください',
+            style: TextStyle(
+              fontSize: 18,
+              color: textColor,
+              fontFamily: 'PixelMplus',
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildButton(context, '初級'),
+          _buildButton(context, '中級'),
+          _buildButton(context, '上級'),
+          _buildButton(context, 'ゲキムズ'),
+          const SizedBox(height: 32),
+          const Divider(thickness: 1, indent: 40, endIndent: 40, color: Colors.white),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                // MaterialPageRoute(builder: (context) => const QuizTypeSelectionPage()),
+                // テスト用に以下を使用
+                MaterialPageRoute(builder: (context) => const QuizRegisterPage()),
+              );
+            },
+            icon: const Icon(Icons.create, color: textColor),
+            label: const Text(
+              'クイズを作成する',
               style: TextStyle(
                 color: textColor,
                 fontFamily: 'PixelMplus',
                 fontSize: 32,
-                )
-              
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange, // 作成ボタンの背景色
-
               ),
             ),
-          ],
-        ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // ↓↓↓ DB接続ステータスの表示（下部に追加）
+          Text(
+            dbStatus,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontFamily: 'PixelMplus',
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
       ),
     );
   }
 
-  /// 難易度ボタン共通ウィジェット
   static Widget _buildButton(BuildContext context, String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -241,13 +286,13 @@ class HomeScreen extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => QuizPage(difficulty: label),
-              ),
+            ),
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white, // ボタン背景
+          backgroundColor: Colors.white,
           foregroundColor: Color(0xFF9932CC),
-          minimumSize: const Size(220,60),
+          minimumSize: const Size(220, 60),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -258,9 +303,10 @@ class HomeScreen extends StatelessWidget {
           style: const TextStyle(
             fontFamily: 'PixelMplus',
             fontSize: 32,
-            ),
           ),
+        ),
       ),
     );
   }
 }
+

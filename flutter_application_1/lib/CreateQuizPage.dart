@@ -4,6 +4,10 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart'; // kIsWeb 用
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // JSON変換
+import 'DBhelper.dart'; // 作ったDBヘルパーをimport
+
 
 
 class CreateQuizPage extends StatefulWidget {
@@ -182,22 +186,6 @@ if (selectedFileName != null) ...[
   ),
 ],
 
-//  const Text(
-//               'クイズのタイトルを入力してください',
-//               style: TextStyle(
-//                 fontSize: 18,
-//                 fontFamily: 'pixelMplus',
-//               ),
-//             ),
-
-//               const SizedBox(height: 10),
-//               const TextField(
-//                 decoration: InputDecoration(
-//                   labelText: 'クイズのタイトル',
-//                   border: OutlineInputBorder(),
-//                   ),
-//                 ),
-
 const SizedBox(height: 20), // ← これを追加
  const Text(
               '問題文を入力してください',
@@ -266,58 +254,58 @@ const SizedBox(height: 20), // ← これを追加
               
 
                 const SizedBox(height: 20),
-const Text(
-  'クイズの種類を選択してください',
-  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-),
+// const Text(
+//   'クイズの種類を選択してください',
+//   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+// ),
 
-CheckboxListTile(
-  title: const Text('曲クイズ'),
-  value: isMusicQuizSelected,
-  onChanged: (bool? value) {
-    setState(() {
-      isMusicQuizSelected = value ?? false;
-    });
-  },
-),
+// CheckboxListTile(
+//   title: const Text('曲クイズ'),
+//   value: isMusicQuizSelected,
+//   onChanged: (bool? value) {
+//     setState(() {
+//       isMusicQuizSelected = value ?? false;
+//     });
+//   },
+// ),
 
-CheckboxListTile(
-  title: const Text('歌詞クイズ'),
-  value: isLyricsQuizSelected,
-  onChanged: (bool? value) {
-    setState(() {
-      isLyricsQuizSelected = value ?? false;
-    });
-  },
-),
+// CheckboxListTile(
+//   title: const Text('歌詞クイズ'),
+//   value: isLyricsQuizSelected,
+//   onChanged: (bool? value) {
+//     setState(() {
+//       isLyricsQuizSelected = value ?? false;
+//     });
+//   },
+// ),
 
-CheckboxListTile(
-  title: const Text('アルバムクイズ'),
-  value: isAlbumQuizSelected,
-  onChanged: (bool? value) {
-    setState(() {
-      isAlbumQuizSelected = value ?? false;
-    });
-  },
-),
-CheckboxListTile(
-  title: const Text('ニラクイズ'),
-  value: isNiraQuizSelected,
-  onChanged: (bool? value) {
-    setState(() {
-      isAlbumQuizSelected = value ?? false;
-    });
-  },
-),
-CheckboxListTile(
-  title: const Text('その他クイズ'),
-  value: isAnotherQuizSelected,
-  onChanged: (bool? value) {
-    setState(() {
-      isAlbumQuizSelected = value ?? false;
-    });
-  },
-),
+// CheckboxListTile(
+//   title: const Text('アルバムクイズ'),
+//   value: isAlbumQuizSelected,
+//   onChanged: (bool? value) {
+//     setState(() {
+//       isAlbumQuizSelected = value ?? false;
+//     });
+//   },
+// ),
+// CheckboxListTile(
+//   title: const Text('ニラクイズ'),
+//   value: isNiraQuizSelected,
+//   onChanged: (bool? value) {
+//     setState(() {
+//       isAlbumQuizSelected = value ?? false;
+//     });
+//   },
+// ),
+// CheckboxListTile(
+//   title: const Text('その他クイズ'),
+//   value: isAnotherQuizSelected,
+//   onChanged: (bool? value) {
+//     setState(() {
+//       isAlbumQuizSelected = value ?? false;
+//     });
+//   },
+// ),
 
 
 
