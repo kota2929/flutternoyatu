@@ -141,6 +141,8 @@ import 'dart:convert';
 
 void main() {
   runApp(const ZutomayoQuizApp());
+
+
 }
 
 class ZutomayoQuizApp extends StatelessWidget {
@@ -160,6 +162,8 @@ class ZutomayoQuizApp extends StatelessWidget {
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -242,9 +246,9 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                // MaterialPageRoute(builder: (context) => const QuizTypeSelectionPage()),
+                MaterialPageRoute(builder: (context) => const QuizTypeSelectionPage()),
                 // テスト用に以下を使用
-                MaterialPageRoute(builder: (context) => const QuizRegisterPage()),
+                // MaterialPageRoute(builder: (context) => const QuizRegisterPage()),
               );
             },
             icon: const Icon(Icons.create, color: textColor),

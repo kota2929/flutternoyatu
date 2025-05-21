@@ -1,35 +1,31 @@
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:just_audio/just_audio.dart';
 
-class QuizRegisterPage extends StatefulWidget {
-  const QuizRegisterPage({Key? key}) : super(key: key);
+class QuizRegisterImagePage extends StatefulWidget {
+  const QuizRegisterImagePage({Key? key}) : super(key: key);
 
   @override
-  State<QuizRegisterPage> createState() => _QuizRegisterPageState();
+  State<QuizRegisterImagePage> createState() => _QuizRegisterImagePageState();
 }
 
-class _QuizRegisterPageState extends State<QuizRegisterPage> {
+class _QuizRegisterImagePageState extends State<QuizRegisterImagePage> {
   String? selectedFileName;
   Uint8List? fileBytes;
   String quizText = '';
   String answer = '';
   String level = '初級';
-
-  final AudioPlayer _audioPlayer = AudioPlayer(); // 🎵 音声プレイヤー
   bool isUploading = false;
 
   bool isValidAnswer(String value) {
     return RegExp(r'^[\u3040-\u309F\u30A0-\u30FFA-Z]+$').hasMatch(value);
   }
 
-  Future<void> pickMp3File() async {
+  Future<void> pickImageFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['mp3'],
+      allowedExtensions: ['jpg', 'jpeg', 'png'],
       withData: true,
     );
 
@@ -39,33 +35,6 @@ class _QuizRegisterPageState extends State<QuizRegisterPage> {
         selectedFileName = pickedFile.name;
         fileBytes = pickedFile.bytes;
       });
-    }
-  }
-
-  Future<void> playSelectedMp3() async {
-    try {
-      await _audioPlayer.stop();
-      if (kIsWeb && fileBytes != null) {
-        await _audioPlayer.setAudioSource(
-          AudioSource.uri(
-            Uri.dataFromBytes(
-              fileBytes!,
-              mimeType: 'audio/mpeg',
-            ),
-          ),
-        );
-      } else if (!kIsWeb && selectedFileName != null) {
-        final result = await FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: ['mp3'],
-        );
-        if (result != null && result.files.single.path != null) {
-          await _audioPlayer.setFilePath(result.files.single.path!);
-        }
-      }
-      await _audioPlayer.play();
-    } catch (e) {
-      print("再生エラー: $e");
     }
   }
 
@@ -81,13 +50,13 @@ class _QuizRegisterPageState extends State<QuizRegisterPage> {
       isUploading = true;
     });
 
-    final uri = Uri.parse("http://localhost/quiz_api/uplode_Intoroquiz.php");
+    final uri = Uri.parse("http://localhost/quiz_api/uplode_Imagequiz.php");
     final request = http.MultipartRequest("POST", uri)
-      ..fields['quiz_genre'] = 'イントロ'
+      ..fields['quiz_genre'] = '画像クイズ'
       ..fields['quiz_text'] = quizText
       ..fields['quiz_answer'] = answer
       ..fields['quiz_level'] = level
-      ..files.add(http.MultipartFile.fromBytes('quiz_MP3', fileBytes!, filename: selectedFileName));
+      ..files.add(http.MultipartFile.fromBytes('quiz_image', fileBytes!, filename: selectedFileName));
 
     final response = await request.send();
 
@@ -107,42 +76,21 @@ class _QuizRegisterPageState extends State<QuizRegisterPage> {
   }
 
   @override
-  void dispose() {
-    _audioPlayer.dispose(); // 🎵 メモリ解放
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("イントロクイズの登録ページ")),
+      appBar: AppBar(title: const Text("画像クイズの登録ページ")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
             ElevatedButton(
-              onPressed: pickMp3File,
-              child: const Text('MP3ファイルを選択'),
+              onPressed: pickImageFile,
+              child: const Text('画像ファイルを選択'),
             ),
-            if (selectedFileName != null) ...[
+            if (selectedFileName != null && fileBytes != null) ...[
               Text("選択済: $selectedFileName"),
-              Row(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: playSelectedMp3,
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text("再生する"),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      await _audioPlayer.stop();
-                    },
-                    icon: const Icon(Icons.stop),
-                    label: const Text("停止"),
-                  ),
-                ],
-              ),
+              const SizedBox(height: 10),
+              Image.memory(fileBytes!, height: 200),
             ],
             const SizedBox(height: 20),
             TextFormField(
