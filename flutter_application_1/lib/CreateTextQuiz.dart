@@ -11,20 +11,32 @@ class QuizRegisterTextPage extends StatefulWidget {
 class _QuizRegisterTextPageState extends State<QuizRegisterTextPage> {
   String quizText = '';
   String answer = '';
+  String quizAnswerReal = '';
   String level = '初級';
   bool isUploading = false;
 
   bool isValidAnswer(String value) {
-    return RegExp(r'^[\u3040-\u309F\u30A0-\u30FFA-Z]+$').hasMatch(value);
+      return RegExp(r'^[ぁ-んァ-ンA-Z。]+$').hasMatch(value);
   }
 
   Future<void> uploadTextQuiz() async {
-    if (quizText.isEmpty || !isValidAnswer(answer)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('問題文と正しい形式の回答を入力してください。')),
-      );
-      return;
-    }
+    
+
+// 1. 必須項目の未入力チェック
+  if (quizText.isEmpty || answer.isEmpty || quizAnswerReal.isEmpty || level.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('すべての項目を入力してください。')),
+    );
+    return;
+  }
+
+  // 2. 回答形式のチェック（ひらがな、カタカナ、英大文字のみ）
+  if (!isValidAnswer(answer)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('回答は「ひらがな」「カタカナ」「英字大文字」「。」のみで記述してください。')),
+    );
+    return;
+  }
 
     setState(() {
       isUploading = true;
@@ -37,6 +49,7 @@ class _QuizRegisterTextPageState extends State<QuizRegisterTextPage> {
         'quiz_genre': 'テキストクイズ',
         'quiz_text': quizText,
         'quiz_answer': answer,
+        'quiz_answer_real':quizAnswerReal,
         'quiz_level': level,
       },
     );
@@ -45,6 +58,8 @@ class _QuizRegisterTextPageState extends State<QuizRegisterTextPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('登録成功！')),
       );
+      await Future.delayed(const Duration(seconds: 1));
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('登録失敗。')),
@@ -59,36 +74,97 @@ class _QuizRegisterTextPageState extends State<QuizRegisterTextPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("テキストクイズの登録ページ")),
+      backgroundColor: const Color(0xFF9932CC),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          "テキストクイズの登録ページ",
+          style: TextStyle(
+            color: Color(0xFF9932CC),
+            fontFamily: 'PixelMplus',
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Color(0xFF9932CC)),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            TextFormField(
-              maxLines: 5,
-              decoration: const InputDecoration(labelText: "問題文"),
-              onChanged: (value) => quizText = value,
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(labelText: "回答（ひらがな/カタカナ/大文字英字のみ）"),
-              onChanged: (value) => answer = value,
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              value: level,
-              items: ['初級', '中級', '上級', 'ゲキムズ'].map((level) {
-                return DropdownMenuItem(value: level, child: Text(level));
-              }).toList(),
-              onChanged: (val) => setState(() => level = val!),
-              decoration: const InputDecoration(labelText: "難易度"),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: isUploading ? null : uploadTextQuiz,
-              child: Text(isUploading ? "アップロード中…" : "登録"),
-            ),
-          ],
+        padding: const EdgeInsets.all(20.0),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: ListView(
+            children: [
+              TextFormField(
+                maxLines: 5,
+                style: const TextStyle(fontFamily: 'PixelMplus'),
+                decoration: const InputDecoration(
+                  labelText: "問題文",
+                  labelStyle: TextStyle(fontFamily: 'PixelMplus'),
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => quizText = value,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                style: const TextStyle(fontFamily: 'PixelMplus'),
+                decoration: const InputDecoration(
+                  labelText: "回答（ひらがな/カタカナ/大文字英字 /。のみ）",
+                  labelStyle: TextStyle(fontFamily: 'PixelMplus'),
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => answer = value,
+              ),
+
+              const SizedBox(height: 20),
+              TextFormField(
+                style: const TextStyle(fontFamily: 'PixelMplus'),
+                decoration: const InputDecoration(
+                  labelText: "実際の回答（形式事由）",
+                  labelStyle: TextStyle(fontFamily: 'PixelMplus'),
+                  border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) => quizAnswerReal = value,
+                ),
+              const SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: level,
+                style: const TextStyle(fontFamily: 'PixelMplus', color: Colors.black),
+                items: ['初級', '中級', '上級', 'ゲキムズ'].map((level) {
+                  return DropdownMenuItem(
+                    value: level,
+                    child: Text(level, style: const TextStyle(fontFamily: 'PixelMplus')),
+                  );
+                }).toList(),
+                onChanged: (val) => setState(() => level = val!),
+                decoration: const InputDecoration(
+                  labelText: "難易度",
+                  labelStyle: TextStyle(fontFamily: 'PixelMplus'),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: ElevatedButton(
+                  onPressed: isUploading ? null : uploadTextQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isUploading ? Colors.grey : const Color(0xFF9932CC),
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(
+                      fontFamily: 'PixelMplus',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                  ),
+                  child: Text(isUploading ? "アップロード中…" : "登録"),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
