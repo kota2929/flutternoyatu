@@ -16,7 +16,8 @@ class _QuizRegisterTextPageState extends State<QuizRegisterTextPage> {
   bool isUploading = false;
 
   bool isValidAnswer(String value) {
-      return RegExp(r'^[ぁ-んァ-ンA-Z。]+$').hasMatch(value);
+      // return RegExp(r'^[ぁ-んァ-ンA-Z。]+$').hasMatch(value);
+        return RegExp(r'^[ぁ-んA-Z。]+$').hasMatch(value);
   }
 
   Future<void> uploadTextQuiz() async {
@@ -33,7 +34,7 @@ class _QuizRegisterTextPageState extends State<QuizRegisterTextPage> {
   // 2. 回答形式のチェック（ひらがな、カタカナ、英大文字のみ）
   if (!isValidAnswer(answer)) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('回答は「ひらがな」「カタカナ」「英字大文字」「。」のみで記述してください。')),
+      const SnackBar(content: Text('回答は「ひらがな」「英字大文字」「。」のみで記述してください。')),
     );
     return;
   }

@@ -20,7 +20,8 @@ class _QuizRegisterImagePageState extends State<QuizRegisterImagePage> {
   bool isUploading = false;
 
   bool isValidAnswer(String value) {
-    return RegExp(r'^[ぁ-んァ-ンA-Z。]+$').hasMatch(value);
+    // return RegExp(r'^[ぁ-んァ-ンA-Z。]+$').hasMatch(value);
+        return RegExp(r'^[ぁ-んA-Z。]+$').hasMatch(value);
   }
 
   Future<void> pickImageFile() async {
@@ -49,7 +50,7 @@ class _QuizRegisterImagePageState extends State<QuizRegisterImagePage> {
 
     if (!isValidAnswer(answer)){
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('回答は「ひらがな」「カタカナ」「英字大文字」「。」のみで記述してください。')),
+        const SnackBar(content: Text('回答は「ひらがな」「英字大文字」「。」のみで記述してください。')),
       );
       return;
     }
