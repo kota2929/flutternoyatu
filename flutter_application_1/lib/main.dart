@@ -140,8 +140,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
+  
   runApp(const ZutomayoQuizApp());
-
 
 }
 
@@ -151,6 +151,7 @@ class ZutomayoQuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // debugShowCheckedModeBanner: false,
       title: 'ZUTOMAYOクイズ',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
@@ -199,87 +200,100 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    const backgroundColor = Color(0xFF9932CC);
-    const textColor = Colors.white;
+@override
+Widget build(BuildContext context) {
+  const backgroundColor = Color(0xFF9932CC);
+  const textColor = Colors.white;
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: backgroundColor,
-        toolbarHeight: 120,
-        title: const Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 90),
-            child: Text(
-              'ZUTOMAYOクイズ',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'PixelMplus',
-                fontSize: 32,
+ return Stack(
+  children: [
+    Container(color: backgroundColor), // ← 背景色を追加
+    Positioned.fill(
+      child: Image.asset(
+        'images/zutomayo-home.png',
+        // fit: BoxFit.cover, // ← コメントアウト
+        alignment: Alignment.topCenter,
+      ),
+    ),
+
+      // その上にScaffold全体を配置
+      Scaffold(
+        backgroundColor: Colors.transparent, // ← これが重要
+        appBar: AppBar(
+          backgroundColor: Colors.transparent, // ← 背景を透過
+          elevation: 0,
+          toolbarHeight: 120,
+          title: const Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 90),
+              child: Text(
+                'ZUTOMAYOクイズ',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'PixelMplus',
+                  fontSize: 32,
+                ),
               ),
             ),
           ),
         ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            '難易度を選んでください',
-            style: TextStyle(
-              fontSize: 18,
-              color: textColor,
-              fontFamily: 'PixelMplus',
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildButton(context, '初級'),
-          _buildButton(context, '中級'),
-          _buildButton(context, '上級'),
-          _buildButton(context, 'ゲキムズ'),
-          const SizedBox(height: 32),
-          const Divider(thickness: 1, indent: 40, endIndent: 40, color: Colors.white),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const QuizTypeSelectionPage()),
-                // テスト用に以下を使用
-                // MaterialPageRoute(builder: (context) => const QuizRegisterPage()),
-              );
-            },
-            icon: const Icon(Icons.create, color: textColor),
-            label: const Text(
-              'クイズを作成する',
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              '難易度を選んでください',
               style: TextStyle(
+                fontSize: 18,
                 color: textColor,
                 fontFamily: 'PixelMplus',
-                fontSize: 32,
               ),
             ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
+            const SizedBox(height: 16),
+            _buildButton(context, '初級'),
+            _buildButton(context, '中級'),
+            _buildButton(context, '上級'),
+            _buildButton(context, 'ゲキムズ'),
+            const SizedBox(height: 32),
+            const Divider(thickness: 1, indent: 300, endIndent: 300, color: Colors.white),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const QuizTypeSelectionPage()),
+                );
+              },
+              icon: const Icon(Icons.create, color: textColor),
+              label: const Text(
+                'クイズを作成する',
+                style: TextStyle(
+                  color: textColor,
+                  fontFamily: 'PixelMplus',
+                  fontSize: 32,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
-
-          // ↓↓↓ DB接続ステータスの表示（下部に追加）
-          Text(
-            dbStatus,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontFamily: 'PixelMplus',
+            const SizedBox(height: 24),
+            Text(
+              dbStatus,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontFamily: 'PixelMplus',
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
-    );
-  }
+    ],
+  );
+}
+
+
 
   static Widget _buildButton(BuildContext context, String label) {
     return Padding(
