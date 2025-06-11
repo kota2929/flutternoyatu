@@ -303,6 +303,7 @@ Widget build(BuildContext context) {
           Navigator.push(
             context,
             MaterialPageRoute(
+              
               builder: (context) => QuizPage(difficulty: label),
             ),
           );
