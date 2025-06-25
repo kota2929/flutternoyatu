@@ -27,6 +27,7 @@ class _QuizPageState extends State<QuizPage> {
   bool isLoading = true;
  html.AudioElement? _audio;
   bool isPlaying = false;
+  List<Map<String, String>> quizResults = [];
 
   bool isValidFormat(String input) {
   // final regExp = RegExp(r'^[ぁ-んァ-ンA-Z。ー]+$');
@@ -81,6 +82,15 @@ void checkAnswer(BuildContext context) {
           onPressed: () {
             Navigator.of(context).pop(); // モーダル閉じる
             answerController.clear();
+
+                // 結果を保存
+    quizResults.add({
+      'question': currentQuiz['quiz_text'],
+      'correct_answer': currentQuiz['quiz_answer'],
+      'real_answer': currentQuiz['quiz_answer_real'],
+      'user_answer': userAnswer,
+    });
+
             nextQuestion(); // 次の問題へ
           },
           child: const Text(
@@ -98,6 +108,8 @@ void checkAnswer(BuildContext context) {
   if (isCorrect) {
     correctCount++;
   }
+
+
 }
 
 
@@ -111,12 +123,15 @@ void nextQuestion() {
     });
   } else {
     // 結果ページへ
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ResultPage(score: correctCount),
-      ),
-    );
+Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (context) => ResultPage(
+      score: correctCount,
+      results: quizResults,
+    ),
+  ),
+);
   }
 }
 
