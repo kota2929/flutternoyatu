@@ -25,7 +25,7 @@ class _QuizRegisterPageState extends State<QuizRegisterPage> {
 
   bool isValidAnswer(String value) {
     // return RegExp(r'^[ぁ-んァ-ンA-Z。]+$').hasMatch(value);
-      return RegExp(r'^[ぁ-んA-Z。]+$').hasMatch(value);
+      return RegExp(r'^[ぁ-んA-Z。ー]+$').hasMatch(value);
   }
 
   Future<void> pickMp3File() async {

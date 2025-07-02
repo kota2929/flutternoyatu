@@ -17,7 +17,7 @@ class _QuizRegisterTextPageState extends State<QuizRegisterTextPage> {
 
   bool isValidAnswer(String value) {
       // return RegExp(r'^[ぁ-んァ-ンA-Z。]+$').hasMatch(value);
-        return RegExp(r'^[ぁ-んA-Z。]+$').hasMatch(value);
+        return RegExp(r'^[ぁ-んA-Z。ー]+$').hasMatch(value);
   }
 
   Future<void> uploadTextQuiz() async {
