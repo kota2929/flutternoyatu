@@ -113,7 +113,7 @@ class _QuizRegisterTextPageState extends State<QuizRegisterTextPage> {
               TextFormField(
                 style: const TextStyle(fontFamily: 'PixelMplus'),
                 decoration: const InputDecoration(
-                  labelText: "回答（ひらがな/カタカナ/大文字英字 /。のみ）",
+                  labelText: "回答（ひらがな/大文字英字 /。のみ）",
                   labelStyle: TextStyle(fontFamily: 'PixelMplus'),
                   border: OutlineInputBorder(),
                 ),

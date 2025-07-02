@@ -81,7 +81,7 @@ class _QuizRegisterPageState extends State<QuizRegisterPage> {
 
     if (!isValidAnswer(answer)){
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('回答は「ひらがな」英字大文字」「。」のみで記述してください。')),
+        const SnackBar(content: Text('回答は「ひらがな」「英字大文字」「。」のみで記述してください。')),
       );
       return;
     }
@@ -218,7 +218,7 @@ Widget build(BuildContext context) {
             TextFormField(
               style: const TextStyle(fontFamily: 'PixelMplus'),
               decoration: const InputDecoration(
-                labelText: "回答（ひらがな/カタカナ/大文字英字のみ）",
+                labelText: "回答（ひらがな/大文字英字のみ）",
                 labelStyle: TextStyle(fontFamily: 'PixelMplus'),
                 border: OutlineInputBorder(),
               ),
