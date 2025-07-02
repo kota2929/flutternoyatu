@@ -21,7 +21,7 @@ class _QuizRegisterImagePageState extends State<QuizRegisterImagePage> {
 
   bool isValidAnswer(String value) {
     // return RegExp(r'^[ぁ-んァ-ンA-Z。]+$').hasMatch(value);
-        return RegExp(r'^[ぁ-んA-Z。]+$').hasMatch(value);
+        return RegExp(r'^[ぁ-んA-Z。ー]+$').hasMatch(value);
   }
 
   Future<void> pickImageFile() async {
