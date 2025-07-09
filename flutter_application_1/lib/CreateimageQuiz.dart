@@ -167,7 +167,7 @@ Widget build(BuildContext context) {
                 color: Colors.black,
               ),
               decoration: const InputDecoration(
-                labelText: "回答（ひらがな/カタカナ/大文字英字のみ）",
+                labelText: "回答（ひらがな/大文字英字のみ）",
                 labelStyle: TextStyle(fontFamily: 'PixelMplus'),
                 border: OutlineInputBorder(),
                 fillColor: Colors.white,
